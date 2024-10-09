@@ -4,11 +4,11 @@ const addComma = (num) => {
   const [integerPart, decimalPart] = strNum.split(".");
 
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
+  const isDecimal = decimalPart !== undefined;
   return (
     (isNegative ? "-" : "") +
     formattedInteger +
-    (decimalPart ? "." + decimalPart : "")
+    (isDecimal ? "." + decimalPart : "")
   );
 };
 
