@@ -11,22 +11,25 @@ import React, { useState } from "react";
 const ageOptions = [...Array(21)].map((_, index) => ({
   value: index,
 }));
+
 const fieldConfig = {
   ageStart: 0,
   ageEnd: 1,
 };
+const disabledHandler = ({ age, name, ageRange }) => {
+  if (fieldConfig[name] === 0 && ageRange[1] !== 0) {
+    return ageRange[1] < age;
+  }
 
-function AgeGroupSelect({ onChange }) {
+  if (fieldConfig[name] === 1) {
+    return ageRange[0] > age;
+  }
+};
+
+function AgeGroupSelect({ onChange, existedAgeGroup }) {
   const [ageRange, setAgeRange] = useState([0, 0]);
-  const disabledHandler = ({ age, name }) => {
-    if (fieldConfig[name] === 0 && ageRange[1] !== 0) {
-      return ageRange[1] < age;
-    }
+  const [errorMsg, setErrorMsg] = useState("");
 
-    if (fieldConfig[name] === 1) {
-      return ageRange[0] > age;
-    }
-  };
   const handleOnChange = ({ target: { value, name } }) => {
     const index = fieldConfig[name];
     const newAgeRange = [...ageRange];
@@ -38,9 +41,16 @@ function AgeGroupSelect({ onChange }) {
       fieldName: "ageGroup",
       value: newAgeRange,
     });
+
+    // validation
+    const checkDuplate = existedAgeGroup.filter(
+      (i) => i[0] === newAgeRange[0] && i[1] === newAgeRange[1]
+    );
+    const isDuplicate = checkDuplate.length > 0;
+    setErrorMsg(isDuplicate ? "年齡區間不可重疊" : "");
   };
   return (
-    <FormControl isInvalid={true} p={2}>
+    <FormControl isInvalid={errorMsg} p={2}>
       <FormLabel fontSize="md" color={"grey"}>
         年齡
       </FormLabel>
@@ -55,7 +65,11 @@ function AgeGroupSelect({ onChange }) {
             <option
               key={index}
               value={value}
-              disabled={disabledHandler({ age: value, name: "ageStart" })}
+              disabled={disabledHandler({
+                age: value,
+                name: "ageStart",
+                ageRange,
+              })}
             >
               {value}
             </option>
@@ -78,7 +92,11 @@ function AgeGroupSelect({ onChange }) {
             <option
               key={index}
               value={value}
-              disabled={disabledHandler({ age: value, name: "ageEnd" })}
+              disabled={disabledHandler({
+                age: value,
+                name: "ageEnd",
+                ageRange,
+              })}
             >
               {value}
             </option>
@@ -92,7 +110,7 @@ function AgeGroupSelect({ onChange }) {
         p={2}
         borderRadius={"5px"}
       >
-        年齡區間不可重疊
+        {errorMsg}
       </FormErrorMessage>
     </FormControl>
   );

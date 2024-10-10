@@ -14,11 +14,7 @@ function PriceInput({ onChange }) {
   const [errorMsg, setErrorMsg] = useState("");
   const handleOnChange = (e) => {
     const value = e.target.value;
-    if (!value) {
-      setErrorMsg("不可以為空白");
-    } else {
-      setErrorMsg("");
-    }
+
     const pureNumber = value.replace(/[^0-9.]/g, "");
     const decimalCount = (pureNumber.match(/\./g) || []).length;
     if (decimalCount <= 1) {
@@ -28,6 +24,8 @@ function PriceInput({ onChange }) {
         value: pureNumber,
       });
     }
+    //validation
+    setErrorMsg(pureNumber === "" ? "不可以為空白" : "");
   };
 
   const [integerPart, decimalPart = ""] = rawPrice.split(".");
@@ -36,7 +34,6 @@ function PriceInput({ onChange }) {
       ? `${addComma(integerPart)}.${decimalPart}`
       : addComma(integerPart) + (rawPrice.endsWith(".") ? "." : "");
 
-  console.log("displayValue", displayValue);
   return (
     <FormControl isInvalid={errorMsg} p={2}>
       <FormLabel fontSize="md" color={"grey"}>
@@ -67,7 +64,7 @@ function PriceInput({ onChange }) {
         p={2}
         borderRadius={"5px"}
       >
-        不可以為空白
+        {errorMsg}
       </FormErrorMessage>
       <Text fontSize="sm" color={"grey"} align={"right"} pt={1}>
         輸入 0 表示免費
