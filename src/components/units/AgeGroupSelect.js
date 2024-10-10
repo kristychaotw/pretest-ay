@@ -8,9 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-const ageOptions = [...Array(21)].map((_, index) => ({
-  value: index,
-}));
+const ageOptions = [...Array(21)].map((_, index) => index);
 
 const fieldConfig = {
   ageStart: 0,
@@ -61,9 +59,9 @@ function AgeGroupSelect({ onChange, existedAgeGroup }) {
           errorBorderColor="red.300"
           onChange={handleOnChange}
         >
-          {ageOptions.map(({ index, value }) => (
+          {ageOptions.map((value) => (
             <option
-              key={index}
+              key={value}
               value={value}
               disabled={disabledHandler({
                 age: value,
@@ -88,9 +86,9 @@ function AgeGroupSelect({ onChange, existedAgeGroup }) {
           errorBorderColor="red.300"
           onChange={handleOnChange}
         >
-          {ageOptions.map(({ index, value }) => (
+          {ageOptions.map((value) => (
             <option
-              key={index}
+              key={value}
               value={value}
               disabled={disabledHandler({
                 age: value,
