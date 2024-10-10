@@ -6,23 +6,37 @@ import {
   InputLeftAddon,
   Select,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+
+const ageOptions = [...Array(21)].map((_, index) => ({
+  value: index,
+}));
+const fieldConfig = {
+  ageStart: 0,
+  ageEnd: 1,
+};
 
 function AgeGroupSelect({ onChange }) {
-  const handleOnChange = ({ target: { value, name } }) => {
-    const result = [0, 0];
-    const nameToIndex = {
-      ageStart: 0,
-      ageEnd: 1,
-    };
+  const [ageRange, setAgeRange] = useState([0, 0]);
+  const disabledHandler = ({ age, name }) => {
+    if (fieldConfig[name] === 0 && ageRange[1] !== 0) {
+      return ageRange[1] < age;
+    }
 
-    const index = nameToIndex[name];
+    if (fieldConfig[name] === 1) {
+      return ageRange[0] > age;
+    }
+  };
+  const handleOnChange = ({ target: { value, name } }) => {
+    const index = fieldConfig[name];
+    const newAgeRange = [...ageRange];
     if (index !== undefined) {
-      result[index] = parseInt(value);
+      newAgeRange[index] = parseInt(value);
+      setAgeRange(newAgeRange);
     }
     onChange({
       fieldName: "ageGroup",
-      value: result,
+      value: newAgeRange,
     });
   };
   return (
@@ -37,11 +51,12 @@ function AgeGroupSelect({ onChange }) {
           errorBorderColor="red.300"
           onChange={handleOnChange}
         >
-          {[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20,
-          ].map((value, index) => (
-            <option key={index} value={value}>
+          {ageOptions.map(({ index, value }) => (
+            <option
+              key={index}
+              value={value}
+              disabled={disabledHandler({ age: value, name: "ageStart" })}
+            >
               {value}
             </option>
           ))}
@@ -54,16 +69,17 @@ function AgeGroupSelect({ onChange }) {
           ～
         </InputLeftAddon>
         <Select
+          name="ageEnd"
           borderRadius={"0px 6px 6px 0px"}
           errorBorderColor="red.300"
-          name="ageStart"
           onChange={handleOnChange}
         >
-          {[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20,
-          ].map((value, index) => (
-            <option key={index} value={value}>
+          {ageOptions.map(({ index, value }) => (
+            <option
+              key={index}
+              value={value}
+              disabled={disabledHandler({ age: value, name: "ageEnd" })}
+            >
               {value}
             </option>
           ))}
