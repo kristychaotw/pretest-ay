@@ -1,13 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import AgeGroupSelect from "./components/units/AgeGroupSelect";
-import PriceInput from "./components/units/PriceInput";
+import AgeGroupPriceList from "./components/widgets/AgeGroupPriceList";
 
 function App() {
   return (
     <ChakraProvider>
       <div className="App">
-        <AgeGroupSelect />
-        <PriceInput />
+        <AgeGroupPriceList onChange={(result) => console.log(result)} />
       </div>
     </ChakraProvider>
   );

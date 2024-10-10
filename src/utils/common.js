@@ -1,8 +1,7 @@
 const addComma = (num) => {
   const isNegative = num < 0;
-  const strNum = Math.abs(num).toString();
+  const strNum = num || num === 0 ? Math.abs(num).toString() : "";
   const [integerPart, decimalPart] = strNum.split(".");
-
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   const isDecimal = decimalPart !== undefined;
   return (
